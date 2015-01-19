@@ -2,10 +2,13 @@
 # include <string.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/types.h>          /* See NOTES */
+#include <sys/socket.h>
 
 #include "socket.h"
 
-int main(int argc, char **argv)
+// int main(int argc, char **argv)
+int main(void)
 {
 	int server_socket = creer_serveur(8080);
 	while(1)
