@@ -4,6 +4,8 @@
 #include <unistd.h>
 #include <sys/types.h>          /* See NOTES */
 #include <sys/socket.h>
+#include <fcntl.h>
+#include <sys/stat.h>
 
 #include "socket.h"
 
@@ -11,8 +13,8 @@
 int main(void)
 {
 	char buff[256];
-	int client_socket, server_socket;
-	const char* welcoming_message = "zeriohhhhhhhhhhhhh\nhhhhhhhhhhhhhhhhhhhhhhhhhhh\nhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh\nhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh\nhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh\nhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh\nhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh\nhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh\nhhhhhhhhhhhhhhhhhhhhhhhhhrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr\nrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr";
+	int client_socket, server_socket, fd_message, length;
+	//const char* welcoming_message = "zeriohhhhhhhhhhhhh\nhhhhhhhhhhhhhhhhhhhhhhhhhhh\nhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh\nhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh\nhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh\nhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh\nhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh\nhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh\nhhhhhhhhhhhhhhhhhhhhhhhhhrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr\nrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr";
 	
 	
 	server_socket = creer_serveur(8080);
@@ -32,11 +34,21 @@ int main(void)
 		}
 		sleep(1);
 		
-		write(client_socket, welcoming_message, strlen(welcoming_message));
-		
-		while (read(client_socket, &buff, sizeof(buff)) != 0)
+		fd_message = open("message", O_RDONLY);
+		if (fd_message == -1)
 		{
-			write(client_socket, &buff, strlen(buff));
+			perror("open message");
+			return -1;
+		}
+		
+		while ((length = read(fd_message, &buff, sizeof(buff))) != 0)
+		{
+			write(client_socket, &buff, length);
+		}
+		
+		while ((length = read(client_socket, &buff, sizeof(buff))) != 0)
+		{
+			write(client_socket, &buff, length);
 		}
 	}
 
