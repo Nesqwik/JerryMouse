@@ -1,0 +1,4 @@
+1. Rien ne s'affiche dans le deuxième client tant que le premier n'est pas fermé (le programme est bloqué dans la boucle "perroquet")
+2. Le serveur devrait renvoyer une erreur car il tente d'écrire dans une socket qui a été fermée instantanèment par l'option -z de netcat
+3. La connection est refusée car on utilise une adresse IPv6 alors que notre serveur a été configuré en IPv4
+4. Rien ne se passe. "Normalement" la socket ne devrait pas être libérée tout de suite car le processus est fermé brutalement.
