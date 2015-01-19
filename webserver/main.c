@@ -1,15 +1,26 @@
 # include <stdio.h>
 # include <string.h>
+#include <string.h>
+#include <unistd.h>
 
+#include "socket.h"
 
 int main(int argc, char **argv)
 {
-	/* Arnold Robbins in the LJ of February ’95 , describing RCS */
-	if (argc > 1 && strcmp(argv [1] , "-advice") == 0) {
-		printf("Don’t Panic !\n");
-		return 42;
+	int server_socket = creer_serveur(8080);
+	while(1)
+	{
+		int client_socket = accept(server_socket, NULL, NULL);
+		const char* welcoming_message = "zeriohhhhhhhhhhhhh\nhhhhhhhhhhhhhhhhhhhhhhhhhhh\nhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh\nhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh\nhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh\nhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh\nhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh\nhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh\nhhhhhhhhhhhhhhhhhhhhhhhhhrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr\nrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr";
+		
+		if (client_socket == -1)
+		{
+			perror("accept socket client");
+			return 1;
+		}
+
+		write(client_socket, welcoming_message, strlen(welcoming_message));
 	}
 
-	printf("Need an advice ?\n");
 	return 0;
 }
