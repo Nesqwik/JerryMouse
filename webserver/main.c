@@ -21,7 +21,7 @@ int main(void)
 			perror("accept socket client");
 			return 1;
 		}
-
+		sleep(1);
 		write(client_socket, welcoming_message, strlen(welcoming_message));
 	}
 
