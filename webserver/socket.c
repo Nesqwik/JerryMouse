@@ -11,6 +11,7 @@ int creer_serveur (int port )
 	if (socket_server == -1)
 	{
 		perror("socket server");
+		return -1;
 	}
 	
 	struct sockaddr_in saddr;
@@ -21,6 +22,13 @@ int creer_serveur (int port )
 	if (bind(socket_server, (struct sockaddr *) &saddr, sizeof(saddr)) == -1)
 	{
 		perror("bind socket_server");
+		return -1;
+	}
+	
+	if(listen(socket_server, 10) == -1)
+	{
+		perror("listen socket_server");
+		return -1;
 	}
 	
 	return socket_server;
