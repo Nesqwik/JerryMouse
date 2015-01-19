@@ -1,2 +1,3 @@
 *.o
-jerrymouse
+webserver/makefile.dep
+webserver/jerrymouse
