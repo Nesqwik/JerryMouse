@@ -46,12 +46,20 @@ int main(void)
 			
 			while ((length = read(fd_message, &buff, sizeof(buff))) != 0)
 			{
-				write(client_socket, &buff, length);
+				if (write(client_socket, &buff, length) == -1)
+				{
+					perror("write message");
+					return -1;
+				}
 			}
 			
 			while ((length = read(client_socket, &buff, sizeof(buff))) != 0)
 			{
-				write(client_socket, &buff, length);
+				if (write(client_socket, &buff, length) == -1)
+				{
+					perror("write message");
+					return -1;
+				}
 			}
 		}
 	}
