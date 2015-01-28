@@ -44,6 +44,7 @@ int main(void)
 				return -1;
 			}
 			
+			
 			while ((length = read(fd_message, &buff, sizeof(buff))) != 0)
 			{
 				write(client_socket, &buff, length);
@@ -53,6 +54,10 @@ int main(void)
 			{
 				write(client_socket, &buff, length);
 			}
+		}
+		else
+		{
+			close(socket_client);
 		}
 	}
 
