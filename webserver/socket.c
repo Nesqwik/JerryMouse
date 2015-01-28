@@ -2,6 +2,10 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 # include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 #include "socket.h"
 
@@ -42,4 +46,38 @@ int creer_serveur (int port)
 	}
 	
 	return socket_server;
+}
+
+
+int traitement_requete(int client_socket) {
+	char buff[256];
+	int fd_message, length;
+	
+	
+	fd_message = open("message", O_RDONLY);
+	if (fd_message == -1)
+	{
+		perror("open message");
+		return -1;
+	}
+	
+	while ((length = read(fd_message, &buff, sizeof(buff))) != 0)
+	{
+		if (write(client_socket, &buff, length) == -1)
+		{
+			perror("write message");
+			return -1;
+		}
+	}
+	
+	while ((length = read(client_socket, &buff, sizeof(buff))) != 0)
+	{
+		if (write(client_socket, &buff, length) == -1)
+		{
+			perror("write message");
+			return -1;
+		}
+	}
+	
+	return 0;
 }

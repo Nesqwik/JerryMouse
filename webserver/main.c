@@ -2,7 +2,7 @@
 # include <string.h>
 #include <string.h>
 #include <unistd.h>
-#include <sys/types.h>          /* See NOTES */
+#include <sys/types.h> 
 #include <sys/socket.h>
 #include <fcntl.h>
 #include <sys/stat.h>
@@ -14,8 +14,8 @@
 // int main(int argc, char **argv)
 int main(void)
 {
-	char buff[256];
-	int client_socket, server_socket, fd_message, length;
+	
+	int client_socket, server_socket;
 	
 	
 	server_socket = creer_serveur(PORT);
@@ -37,30 +37,7 @@ int main(void)
 		}
 		
 		if(fork() == 0) {
-			fd_message = open("message", O_RDONLY);
-			if (fd_message == -1)
-			{
-				perror("open message");
-				return -1;
-			}
-			
-			while ((length = read(fd_message, &buff, sizeof(buff))) != 0)
-			{
-				if (write(client_socket, &buff, length) == -1)
-				{
-					perror("write message");
-					return -1;
-				}
-			}
-			
-			while ((length = read(client_socket, &buff, sizeof(buff))) != 0)
-			{
-				if (write(client_socket, &buff, length) == -1)
-				{
-					perror("write message");
-					return -1;
-				}
-			}
+			traitement_requete(client_socket);
 		}
 	}
 
