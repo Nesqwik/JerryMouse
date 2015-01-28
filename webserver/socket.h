@@ -8,5 +8,5 @@
 	socket créée . */
 
 	int creer_serveur (int port );
-	int traitement_requete(int client_socket);
+	void traitement_requete(int client_socket);
 # endif
