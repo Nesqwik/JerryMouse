@@ -9,6 +9,7 @@
 
 #include "socket.h"
 #include "const.h"
+#include "signals.h"
 
 // int main(int argc, char **argv)
 int main(void)
@@ -23,6 +24,8 @@ int main(void)
 		return 1;
 	}
 	
+	initialiser_signaux();
+	
 	while(1)
 	{
 		client_socket = accept(server_socket, NULL, NULL);
@@ -32,23 +35,24 @@ int main(void)
 			perror("accept socket client");
 			return 1;
 		}
-		sleep(1);
 		
-		fd_message = open("message", O_RDONLY);
-		if (fd_message == -1)
-		{
-			perror("open message");
-			return -1;
-		}
-		
-		while ((length = read(fd_message, &buff, sizeof(buff))) != 0)
-		{
-			write(client_socket, &buff, length);
-		}
-		
-		while ((length = read(client_socket, &buff, sizeof(buff))) != 0)
-		{
-			write(client_socket, &buff, length);
+		if(fork() == 0) {
+			fd_message = open("message", O_RDONLY);
+			if (fd_message == -1)
+			{
+				perror("open message");
+				return -1;
+			}
+			
+			while ((length = read(fd_message, &buff, sizeof(buff))) != 0)
+			{
+				write(client_socket, &buff, length);
+			}
+			
+			while ((length = read(client_socket, &buff, sizeof(buff))) != 0)
+			{
+				write(client_socket, &buff, length);
+			}
 		}
 	}
 
