@@ -8,6 +8,7 @@
 #include <sys/stat.h>
 
 #include "socket.h"
+#include "const.h"
 
 // int main(int argc, char **argv)
 int main(void)
@@ -16,7 +17,7 @@ int main(void)
 	int client_socket, server_socket, fd_message, length;
 	
 	
-	server_socket = creer_serveur(8080);
+	server_socket = creer_serveur(PORT);
 	if(server_socket == -1)
 	{
 		return 1;
