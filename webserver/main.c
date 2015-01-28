@@ -39,6 +39,10 @@ int main(void)
 		if(fork() == 0) {
 			traitement_requete(client_socket);
 		}
+		else
+		{
+			close(socket_client);
+		}
 	}
 
 	return 0;
