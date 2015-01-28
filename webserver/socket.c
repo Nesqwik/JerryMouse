@@ -52,29 +52,36 @@ int creer_serveur (int port)
 int traitement_requete(int client_socket) {
 	char buff[256];
 	int fd_message, length;
+	FILE* file;	
 	
-	
-	fd_message = open("message", O_RDONLY);
-	if (fd_message == -1)
+	file = open("message", "w+");
+	if (file == NULL)
 	{
-		perror("open message");
+		perror("fdopen message");
 		return -1;
 	}
 	
-	while ((length = read(fd_message, &buff, sizeof(buff))) != 0)
+	while (fgets(buff, sizeof(buff), file) != NULL)
 	{
-		if (write(client_socket, &buff, length) == -1)
+		if (fwrite(buff, sizeof(buff), 1, file) != 1)
 		{
 			perror("write message");
 			return -1;
 		}
 	}
 	
-	while ((length = read(client_socket, &buff, sizeof(buff))) != 0)
+	file = fdopen(client_socket, "w+");
+	if (file == NULL)
+	{
+		perror("fdopen socket");
+		return -1;
+	}
+
+	while (fgets(buff, sizeof(buff), file) != NULL)
 	{
 		if (write(client_socket, &buff, length) == -1)
 		{
-			perror("write message");
+			perror("write message");œ
 			return -1;
 		}
 	}
