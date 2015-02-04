@@ -10,11 +10,11 @@
 #include "socket.h"
 #include "const.h"
 #include "signals.h"
+#include "strtool.h"
 
 // int main(int argc, char **argv)
 int main(void)
 {
-	
 	int client_socket, server_socket;
 
 	/* Création de la socket serveur sur le port (8080) */
