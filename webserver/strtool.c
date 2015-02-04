@@ -47,3 +47,16 @@ int is_valid_line(char* line) {
 	}
 	return strlen(buf);
 }
+
+
+/* Retourne la taille du fichier passé en paramètre */
+int filelen(int fd) {
+	FILE* file = fdopen(fd, "r");
+	int len = 0;
+
+	fseek(file, 0L, SEEK_END);
+	len = ftell(file);
+	rewind(file);
+	fclose(file);
+	return len;
+}

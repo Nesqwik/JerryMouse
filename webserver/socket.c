@@ -7,10 +7,10 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
-
+#include <string.h>
 #include "strtool.h"
 #include "socket.h"
-
+#include "http.h"
 
 int creer_serveur (int port)
 {
@@ -57,34 +57,9 @@ int creer_serveur (int port)
 
 void traitement_requete(int client_socket) {
 	char buff[256];
-	//int fd_message;
 	FILE* file;
-	int ret;
-		
-	/*fd_message = open("message", O_RDONLY);
-	if (fd_message == -1)
-	{
-		perror("open message");
-		exit(1);
-	}
-
-	file = fdopen(fd_message, "r");
-	if (file == NULL)
-	{
-		perror("fdopen message");
-		exit(1);
-	}
 	
-	while (fgets(buff, sizeof(buff), file) != NULL)
-	{
-		if (fwrite(buff, sizeof(buff), 1, file) != 1)
-		{
-			perror("write message");
-			exit(1);
-		}
-	}*/
-	
-	/* On ouvre la socket et on associe son contenu à file */
+	/* On ouvre la socket et on associe son contenu a file */
 	file = fdopen(client_socket, "w+");
 	if (file == NULL)
 	{
@@ -92,40 +67,38 @@ void traitement_requete(int client_socket) {
 		exit(1);
 	}
 
-	/* On lit l'en-tête de la requête */
+	/* On lit l'en-tete de la requete */
 	if (fgets(buff, sizeof(buff), file) == NULL) {
-	  perror("fgets initial");
-	  exit(1);
+		perror("fgets initial");
+		exit(1);
 	}
 
 	printf("%s", buff);
 
-	/* On vérifie la validité de l'en-tête */
+	/* On vÃ©rifie la validitÃ© de l'en-tÃªte */
 	if (is_valid_request(buff) == -1) {
-	  printf("en-tête invalide \n");
-	  /* retour 400 */
-	  exit(1);
+		printf("en-tete invalide \n");
+		/* retour 400 */
+		send_400_error(client_socket);
+		exit(1);
 	}
 	
 	/* Lecture et renvoi des messages du client */
-	while ((ret = is_valid_line(buff)) > 0)
+	while (strcmp(buff, "\r\n") != 0 && strcmp(buff, "\n") != 0)
 	{
-	  printf("%s", buff);
+		printf("%s", buff);
 
-	  if (fgets(buff, sizeof(buff), file) == NULL) {
-	    perror("fgets");
-	    exit(1);
-	  }
-	}
-	
-	if (ret < 0) {
-	  printf("requête invalide format ligne\n");
-	  /* retour 400 */
-	  exit(1);
+		if (fgets(buff, sizeof(buff), file) == NULL) {
+			perror("fgets");
+			exit(1);
+		}
 	}
 
-	printf("requête valide\n");
+	printf("requete valide\n");
 	/* retour 200 */
-	  
+	send_200_response(client_socket);
 	exit(0);
 }
+
+
+

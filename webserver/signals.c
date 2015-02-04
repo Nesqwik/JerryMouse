@@ -9,9 +9,9 @@
 
 
 /* Traitement du signal de fin de fils */
-void traitement_signal(int sig)
+void traitement_signal()
 {
-	printf("Signal %d reçu \n", sig);
+	//printf("Signal %d reçu \n", sig);
 	wait(NULL);
 }
 
