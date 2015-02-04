@@ -16,7 +16,7 @@ int parse_request(char* request, char* url, int* version_m)
 	return 0;
 }
 
-/* Vérifie si la requête HTTP est valide (version supportée) */
+/* Vérifie si la requête HTTP est valide (version supportée) et renvoie le statut de la r�ponse*/
 int is_valid_request(char* request) {
 	//char method[10];
 	char url[255];
@@ -24,18 +24,21 @@ int is_valid_request(char* request) {
 	int version_m = 0;
 	
 	if(parse_request(request, url, &version_m) == -1)
-		return -1;
+		return 400;
 	
 	/*if(strcmp(method, "GET") != 0)
 		return -1;
 	
 	if(version_M != 1)
 		return -1;*/
+
+	if (strcmp("/", url) != 0) 
+	  return 404;
 	
 	if(version_m != 1 && version_m != 0)
-		return -1;
+	  return 400;
 	
-	return 0;
+	return 200;
 }
 
 

@@ -58,6 +58,7 @@ int creer_serveur (int port)
 void traitement_requete(int client_socket) {
 	char buff[256];
 	FILE* file;
+	int status;
 	
 	/* On ouvre la socket et on associe son contenu a file */
 	file = fdopen(client_socket, "w+");
@@ -75,13 +76,23 @@ void traitement_requete(int client_socket) {
 
 	printf("%s", buff);
 
+	status = is_valid_request(buff);
+
 	/* On vérifie la validité de l'en-tête */
-	if (is_valid_request(buff) == -1) {
-		printf("en-tete invalide \n");
-		/* retour 400 */
+	if (status == 400) {
+		printf("erreur 400 \n");
+		
 		send_400_error(client_socket);
 		exit(1);
+	} 
+	if (status == 404) {
+	  printf("404 \n");
+	  
+	  send_404_error(client_socket);
+	  exit(1);
 	}
+
+	
 	
 	/* Lecture et renvoi des messages du client */
 	while (strcmp(buff, "\r\n") != 0 && strcmp(buff, "\n") != 0)

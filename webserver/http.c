@@ -18,6 +18,16 @@ void send_400_error(int fd_socket) {
 	}
 }
 
+void send_404_error(int fd_socket) {
+	
+	const char* error_404 = "HTTP/1.1 404 File Not Found\r\nConnection: close\r\nContent-Length: 20\r\n\r\n404 File Not Found\r\n";
+	if (write(fd_socket, error_404, strlen(error_404)) == -1)
+	{
+		perror("write message");
+		exit(1);
+	}
+}
+
 
 
 void send_200_response(int fd_socket) {
