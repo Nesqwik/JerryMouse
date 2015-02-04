@@ -92,8 +92,7 @@ void traitement_requete(int client_socket) {
 	/* Lecture et renvoi des messages du client */
 	while (fgets(buff, sizeof(buff), file) != NULL)
 	{
-		printf(">%s", buff);
-		fprintf(file, "<jerrymouse> %s", buff);		
+		printf("< %s", buff);
 	}
 	
 	exit(0);

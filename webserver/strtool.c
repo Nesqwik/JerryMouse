@@ -35,3 +35,14 @@ int is_valid_request(char* request) {
 	
 	return 0;
 }
+
+
+/* Retourne le nombre de caractères lus sur la ligne 
+   ou -1 si la ligne ne se termine pas par \r\n */
+int is_valid_line(char* line) {
+	char buf[255];
+	if (sscanf(line, "%s\r\n", buf) != 1) {
+		return -1;
+	}
+	return strlen(buf);
+}
