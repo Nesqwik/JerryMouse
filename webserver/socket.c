@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 
+#include "strtool.h"
 #include "socket.h"
 
 
@@ -57,7 +58,8 @@ int creer_serveur (int port)
 void traitement_requete(int client_socket) {
 	char buff[256];
 	//int fd_message;
-	FILE* file;	
+	FILE* file;
+	int ret;
 		
 	/*fd_message = open("message", O_RDONLY);
 	if (fd_message == -1)
@@ -82,6 +84,7 @@ void traitement_requete(int client_socket) {
 		}
 	}*/
 	
+	/* On ouvre la socket et on associe son contenu à file */
 	file = fdopen(client_socket, "w+");
 	if (file == NULL)
 	{
@@ -89,11 +92,40 @@ void traitement_requete(int client_socket) {
 		exit(1);
 	}
 
-	/* Lecture et renvoi des messages du client */
-	while (fgets(buff, sizeof(buff), file) != NULL)
-	{
-		printf("< %s", buff);
+	/* On lit l'en-tête de la requête */
+	if (fgets(buff, sizeof(buff), file) == NULL) {
+	  perror("fgets initial");
+	  exit(1);
+	}
+
+	printf("%s", buff);
+
+	/* On vérifie la validité de l'en-tête */
+	if (is_valid_request(buff) == -1) {
+	  printf("en-tête invalide \n");
+	  /* retour 400 */
+	  exit(1);
 	}
 	
+	/* Lecture et renvoi des messages du client */
+	while ((ret = is_valid_line(buff)) > 0)
+	{
+	  printf("%s", buff);
+
+	  if (fgets(buff, sizeof(buff), file) == NULL) {
+	    perror("fgets");
+	    exit(1);
+	  }
+	}
+	
+	if (ret < 0) {
+	  printf("requête invalide format ligne\n");
+	  /* retour 400 */
+	  exit(1);
+	}
+
+	printf("requête valide\n");
+	/* retour 200 */
+	  
 	exit(0);
 }
