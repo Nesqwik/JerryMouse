@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "strtool.h"
 
@@ -51,12 +52,11 @@ int is_valid_line(char* line) {
 
 /* Retourne la taille du fichier passé en paramètre */
 int filelen(int fd) {
-	FILE* file = fdopen(fd, "r");
-	int len = 0;
+int len = 0;
 
-	fseek(file, 0L, SEEK_END);
-	len = ftell(file);
-	rewind(file);
-	fclose(file);
+	len = lseek(fd, 0, SEEK_END);
+	
+	lseek(fd, 0, SEEK_SET);
+     
 	return len;
 }
