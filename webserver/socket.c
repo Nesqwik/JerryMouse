@@ -102,14 +102,8 @@ void traitement_requete(int client_socket)
 		exit(1);
 	}
 
-	
-	
-	/* Lecture et renvoi des messages du client */
-	while (strcmp(buff, "\r\n") != 0 && strcmp(buff, "\n") != 0)
-	{
-		printf("%s", buff);
-		fgets_or_exit(buff, sizeof(buff), file);
-	}
+	/* On passe les headers non supportés */
+	skip_headers(file);
 
 	printf("requete valide\n");
 	/* retour 200 */
@@ -119,3 +113,12 @@ void traitement_requete(int client_socket)
 
 
 
+void skip_headers(FILE* client)
+{
+	char buff[256];
+	while (strcmp(buff, "\r\n") != 0 && strcmp(buff, "\n") != 0)
+	{
+		//printf("%s", buff);
+		fgets_or_exit(buff, sizeof(buff), client);
+	}
+}

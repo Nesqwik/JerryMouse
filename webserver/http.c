@@ -57,7 +57,6 @@ void send_200_response(int fd_socket) {
 	
 	while ((nb_read = read(fd_message, buff, sizeof(buff))) > 0)
 	{
-		printf("%d\n", nb_read);
 		if (write(fd_socket, buff, nb_read) == -1)
 		{
 			perror("write message");
