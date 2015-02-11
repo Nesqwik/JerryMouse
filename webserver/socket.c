@@ -55,6 +55,17 @@ int creer_serveur (int port)
 }
 
 
+
+
+char* fgets_or_exit (char* buffer, int size, FILE* stream)
+{
+	if (fgets(buffer, size, stream) == NULL) {
+		perror("fgets");
+		exit(1);
+	}
+	return buffer;
+}
+
 void traitement_requete(int client_socket) {
 	char buff[256];
 	FILE* file;
@@ -68,10 +79,7 @@ void traitement_requete(int client_socket) {
 	}
 
 	/* On lit l'en-tete de la requete */
-	if (fgets(buff, sizeof(buff), file) == NULL) {
-		perror("fgets initial");
-		exit(1);
-	}
+	fgets_or_exit(buff, sizeof(buff), file);
 
 	printf("%s", buff);
 
@@ -87,11 +95,7 @@ void traitement_requete(int client_socket) {
 	while (strcmp(buff, "\r\n") != 0 && strcmp(buff, "\n") != 0)
 	{
 		printf("%s", buff);
-
-		if (fgets(buff, sizeof(buff), file) == NULL) {
-			perror("fgets");
-			exit(1);
-		}
+		fgets_or_exit(buff, sizeof(buff), file);
 	}
 
 	printf("requete valide\n");
