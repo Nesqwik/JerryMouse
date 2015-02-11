@@ -5,7 +5,7 @@
 #include "strtool.h"
 
 
-/* Parse la requête HTTP pour être conforme à la forme voulue */
+/* Parse la requÃªte HTTP pour Ãªtre conforme Ã  la forme voulue */
 int parse_request(char* request, char* url, int* version_m)
 {
 	int ret = sscanf(request, "GET %s HTTP/1.%d", url, version_m);
@@ -16,7 +16,7 @@ int parse_request(char* request, char* url, int* version_m)
 	return 0;
 }
 
-/* Vérifie si la requête HTTP est valide (version supportée) et renvoie le statut de la r�ponse*/
+/* VÃ©rifie si la requÃªte HTTP est valide (version supportÃ©e) et renvoie le statut de la réponse*/
 int is_valid_request(char* request) {
 	//char method[10];
 	char url[255];
@@ -42,7 +42,7 @@ int is_valid_request(char* request) {
 }
 
 
-/* Retourne le nombre de caractères lus sur la ligne 
+/* Retourne le nombre de caractÃ¨res lus sur la ligne 
    ou -1 si la ligne ne se termine pas par \r\n */
 int is_valid_line(char* line) {
 	char buf[255];
@@ -53,7 +53,7 @@ int is_valid_line(char* line) {
 }
 
 
-/* Retourne la taille du fichier passé en paramètre */
+/* Retourne la taille du fichier passÃ© en paramÃ¨tre */
 int filelen(int fd) {
 int len = 0;
 
