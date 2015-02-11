@@ -59,14 +59,16 @@ int creer_serveur (int port)
 
 char* fgets_or_exit (char* buffer, int size, FILE* stream)
 {
-	if (fgets(buffer, size, stream) == NULL) {
+	if (fgets(buffer, size, stream) == NULL)
+	{
 		perror("fgets");
 		exit(1);
 	}
 	return buffer;
 }
 
-void traitement_requete(int client_socket) {
+void traitement_requete(int client_socket) 
+{
 	char buff[256];
 	FILE* file;
 	int status;
@@ -94,10 +96,10 @@ void traitement_requete(int client_socket) {
 		exit(1);
 	} 
 	if (status == 404) {
-	  printf("404 \n");
+		printf("404 \n");
 	  
-	  send_404_error(client_socket);
-	  exit(1);
+		send_404_error(client_socket);
+		exit(1);
 	}
 
 	

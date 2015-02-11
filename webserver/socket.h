@@ -1,5 +1,5 @@
-# ifndef __SOCKET_H__
-# define __SOCKET_H__
+#ifndef __SOCKET_H__
+#define __SOCKET_H__
 
 	/* * Crée une socket serveur qui écoute sur toute les interfaces IPv4
 	de la machine sur le port passé en paramètre . La socket retournée
@@ -9,4 +9,5 @@
 
 	int creer_serveur (int port );
 	void traitement_requete(int client_socket);
-# endif
+	char* fgets_or_exit(char* buffer, int size, FILE* stream);
+#endif
