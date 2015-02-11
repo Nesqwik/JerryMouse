@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 #include "strtool.h"
 
@@ -10,7 +11,7 @@ retourne -1 si elle est invalide et 0 sinon */
 int parse_http_request(const char *request_line , http_request *request)
 {
 	char method[256];
-	char url[256];
+	char* url = malloc(256);
 	int ret = sscanf(request_line, "%s %s HTTP/%d.%d", method, url, &(request->major_version), &(request->minor_version));
 
 	request->url = url;
@@ -39,16 +40,20 @@ int is_valid_request(const char* request) {
 		return 400;
 	
 	if(req.method != 0)
-		return 400;
+		return 405;
 	
 	if(req.major_version != 1)
-		return 400;	
+		return 505;	
 
-	if (strcmp("/", req.url) != 0) 
-	  return 404;
+	if (strcmp("/", req.url) != 0) {
+		free(req.url);
+	  	return 404;
+	}
+
+	free(req.url);
 	
 	if(req.minor_version != 1 && req.minor_version != 0)
-	  return 400;
+	  return 505;
 	
 	return 200;
 }
