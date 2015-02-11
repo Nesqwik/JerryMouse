@@ -4,38 +4,50 @@
 
 #include "strtool.h"
 
-
-/* Parse la requête HTTP pour être conforme à la forme voulue */
-int parse_request(char* request, char* url, int* version_m)
+/* Parse la requête HTTP pour être conforme à la forme voulue  
+retourne -1 si elle est invalide et 0 sinon */
+/*int parse_request(char* request, char* url, int* version_m)*/
+int parse_http_request(const char *request_line , http_request *request)
 {
-	int ret = sscanf(request, "GET %s HTTP/1.%d", url, version_m);
-	if(ret != 2) {
+	char method[256];
+	char url[256];
+	int ret = sscanf(request_line, "%s %s HTTP/%d.%d", method, url, &(request->major_version), &(request->minor_version));
+
+	request->url = url;
+
+	if(ret != 4) 
+	{
 		return -1;
+	}
+	if (strcmp(method, "GET") == 0) 
+	{
+		request->method = HTTP_GET;
+	}
+	else 
+	{
+		request->method = HTTP_UNSUPPORTED;
 	}
 	
 	return 0;
 }
 
 /* Vérifie si la requête HTTP est valide (version supportée) et renvoie le statut de la réponse*/
-int is_valid_request(char* request) {
-	//char method[10];
-	char url[255];
-	//int version_M = 0;
-	int version_m = 0;
+int is_valid_request(const char* request) {
+	http_request req;
 	
-	if(parse_request(request, url, &version_m) == -1)
+	if(parse_http_request(request, &req) == -1)
 		return 400;
 	
-	/*if(strcmp(method, "GET") != 0)
-		return -1;
+	if(req.method != 0)
+		return 400;
 	
-	if(version_M != 1)
-		return -1;*/	
+	if(req.major_version != 1)
+		return 400;	
 
-	if (strcmp("/", url) != 0) 
+	if (strcmp("/", req.url) != 0) 
 	  return 404;
 	
-	if(version_m != 1 && version_m != 0)
+	if(req.minor_version != 1 && req.minor_version != 0)
 	  return 400;
 	
 	return 200;
