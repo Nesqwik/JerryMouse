@@ -31,7 +31,7 @@ int is_valid_request(char* request) {
 	
 	if(version_M != 1)
 		return -1;*/
-		
+	
 	
 	if(version_m != 1 && version_m != 0)
 		return -1;
