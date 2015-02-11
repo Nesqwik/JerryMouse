@@ -91,19 +91,21 @@ void traitement_requete(int client_socket)
 	status = is_valid_request(buff);
 
 	/* On vérifie la validité de l'en-tête */
+
+	if (status == 505) {
+		send_response(client, 505, "HTTP Version Not Supported", "HTTP Version Not Supported\r\n");
+	}
 	if (status == 400) {
-		printf("erreur 400 \n");
 		send_response(client, 400, "Bad Request", "Bad Request\r\n");
 	} 
-	if (status == 404) {
-		printf("404 \n");
-		send_response(client, 404, "Not Found", "Not Found \r\n");
+	if (status == 405) {
+		send_response(client, 405, "Method Not Allowed", "Method Not Allowed\r\n" );
+	}
+	if(status == 200) {
+		send_response(client, 200, "OK", "Bienvenue ! \r\n");
 	}
 
-	printf("requete valide\n");
-	/* retour 200 */
-	send_response(client, 200, "OK", "Toto \r\n");
-	exit(0);
+	send_response(client, 404, "Not Found", "Not Found\r\n");
 }
 
 
