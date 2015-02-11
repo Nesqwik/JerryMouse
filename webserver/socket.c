@@ -70,20 +70,22 @@ char* fgets_or_exit (char* buffer, int size, FILE* stream)
 void traitement_requete(int client_socket) 
 {
 	char buff[256];
-	FILE* file;
+	FILE* client;
 	int status;
 	
-	/* On ouvre la socket et on associe son contenu a file */
-	file = fdopen(client_socket, "w+");
-	if (file == NULL)
+	/* On ouvre la socket et on associe son contenu a client */
+	client = fdopen(client_socket, "w+");
+	if (client == NULL)
 	{
 		perror("fdopen socket");
 		exit(1);
 	}
 
 	/* On lit l'en-tete de la requete */
-	fgets_or_exit(buff, sizeof(buff), file);
-
+	fgets_or_exit(buff, sizeof(buff), client);
+	/* On passe les headers non supportés */
+	skip_headers(client);
+	
 	printf("%s", buff);
 
 	status = is_valid_request(buff);
@@ -91,23 +93,16 @@ void traitement_requete(int client_socket)
 	/* On vérifie la validité de l'en-tête */
 	if (status == 400) {
 		printf("erreur 400 \n");
-		
-		send_400_error(client_socket);
-		exit(1);
+		send_response(client, 400, "Bad Request", "Bad Request\r\n");
 	} 
 	if (status == 404) {
 		printf("404 \n");
-	  
-		send_404_error(client_socket);
-		exit(1);
+		send_response(client, 404, "Not Found", "Not Found \r\n");
 	}
-
-	/* On passe les headers non supportés */
-	skip_headers(file);
 
 	printf("requete valide\n");
 	/* retour 200 */
-	send_200_response(client_socket);
+	send_response(client, 200, "OK", "Toto \r\n");
 	exit(0);
 }
 
