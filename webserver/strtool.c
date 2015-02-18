@@ -128,9 +128,15 @@ char *rewrite_url(char *url)
 		if (url[i] == '?') 
 		{		
 			url[i] = 0;
-			break;
+			return url;
 		}
 		i++;
 	}
+
+	if (url[i - 1] == '/')
+	{
+		strcat(url, "index.html");
+	}
+
 	return url;
 }	
