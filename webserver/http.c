@@ -45,7 +45,7 @@ void send_200_response(int fd_socket) {
 	}
 	
 	
-	int message_len = filelen(fd_message);
+	int message_len = get_file_size(fd_message);
 	sprintf(buff, "HTTP/1.1 200 OK\r\nConnection: close\r\nContent-Length: %d\r\n\r\n", message_len);
 	if (write(fd_socket, buff, strlen(buff)) == -1)
 	{
@@ -95,4 +95,20 @@ void send_response(FILE* client, int code, const char* reason_phrase , const cha
 	}
 
 	exit(0);
+}
+
+
+void send_response(int client_socket, int code, const char* reason_phrase, int fd_message)
+{
+	int message_len = get_file_size(fd_message);
+	char response[1024];
+	sprintf(response, "Connection: close\r\nContent-Length: %d\r\n\r\n", message_len);
+	send_status(client, code, reason_phrase);
+
+	printf("%s", response);
+	if (fwrite(response, strlen(response), 1, client) == 0)
+	{
+		perror("write status");
+		exit(1);
+	}
 }

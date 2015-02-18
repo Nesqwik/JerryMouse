@@ -83,6 +83,7 @@ void traitement_requete(int client_socket)
 
 	/* On lit l'en-tete de la requete */
 	fgets_or_exit(buff, sizeof(buff), client);
+
 	/* On passe les headers non supportés */
 	skip_headers(client);
 	
@@ -95,17 +96,19 @@ void traitement_requete(int client_socket)
 	if (status == 505) {
 		send_response(client, 505, "HTTP Version Not Supported", "HTTP Version Not Supported\r\n");
 	}
-	if (status == 400) {
-		send_response(client, 400, "Bad Request", "Bad Request\r\n");
+	if (status == 404) {
+		send_response(client, 404, "Not Found", "Not Found\r\n");
 	} 
 	if (status == 405) {
 		send_response(client, 405, "Method Not Allowed", "Method Not Allowed\r\n" );
 	}
 	if(status == 200) {
-		send_response(client, 200, "OK", "Bienvenue ! \r\n");
+		send_response(client, 200, "OK", int fd);
+		copy(int fd, client_socket);
+		exit(0);
 	}
 
-	send_response(client, 404, "Not Found", "Not Found\r\n");
+	send_response(client, 400, "Bad Request", "Bad Request\r\n");
 }
 
 

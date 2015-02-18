@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <unistd.h>
 #include <stdlib.h>
 
@@ -33,7 +35,8 @@ int parse_http_request(const char *request_line , http_request *request)
 }
 
 /* Vérifie si la requête HTTP est valide (version supportée) et renvoie le statut de la réponse*/
-int is_valid_request(const char* request) {
+int is_valid_request(const char* request) 
+{
 	http_request req;
 	
 	if(parse_http_request(request, &req) == -1)
@@ -45,7 +48,8 @@ int is_valid_request(const char* request) {
 	if(req.major_version != 1)
 		return 505;	
 
-	if (strcmp("/", req.url) != 0) {
+	if (is_valid_file(req.url) != 0)
+	{
 		free(req.url);
 	  	return 404;
 	}
@@ -58,12 +62,19 @@ int is_valid_request(const char* request) {
 	return 200;
 }
 
+int is_valid_file(char* url) 
+{
+	return access(url, F_OK);
+}
+
 
 /* Retourne le nombre de caractères lus sur la ligne 
    ou -1 si la ligne ne se termine pas par \r\n */
-int is_valid_line(char* line) {
+int is_valid_line(char* line) 
+{
 	char buf[255];
-	if (sscanf(line, "%s\r\n", buf) != 1) {
+	if (sscanf(line, "%s\r\n", buf) != 1) 
+	{
 		return -1;
 	}
 	return strlen(buf);
@@ -71,12 +82,33 @@ int is_valid_line(char* line) {
 
 
 /* Retourne la taille du fichier passé en paramètre */
-int filelen(int fd) {
-int len = 0;
+int get_file_size(int fd)
+{
+	struct stat stats;
+	fstat(fd, &stats);
+    
+	return stats.st_size;
+}
 
-	len = lseek(fd, 0, SEEK_END);
-	
-	lseek(fd, 0, SEEK_SET);
-     
-	return len;
+
+int copy(int in, int out)
+{
+	char buff[256];
+	int size = 0;
+	while((size = read(in, buff, sizeof(buff)))!= 0)
+	{
+
+		if(size == -1)
+		{
+			perror("read");
+			return -1;
+		}
+
+		if(write(out, buff, size)) 
+		{
+			perror("wirte");
+			return -1;
+		}
+			
+	}
 }
