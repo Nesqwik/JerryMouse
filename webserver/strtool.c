@@ -50,6 +50,9 @@ int is_valid_request(const char* request, char* url)
 
 	strcpy(url, req.url);
 
+	if (strstr(req.url, "../") != NULL)
+		return 400;
+	
 	free(req.url);
 	
 	if(req.minor_version != 1 && req.minor_version != 0)

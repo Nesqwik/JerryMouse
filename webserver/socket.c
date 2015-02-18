@@ -74,7 +74,7 @@ void traitement_requete(int client_socket, char* root_directory)
 	char url[256];
 	FILE* client;
 	int status;
-	int fd_ressource;
+	int fd_ressource = 0;
 	
 	/* On ouvre la socket et on associe son contenu a client */
 	client = fdopen(client_socket, "w+");
@@ -93,12 +93,15 @@ void traitement_requete(int client_socket, char* root_directory)
 	printf("%s", buff);
 
 	status = is_valid_request(buff, url);
+	
+	if (status == 200) 
+	{
+		fd_ressource = check_and_open(rewrite_url(url), root_directory);
 
-	fd_ressource = check_and_open(rewrite_url(url), root_directory);
-
-	if(fd_ressource == -1)
-		status = 404;
-
+		if(fd_ressource == -1)
+			status = 404;
+	}
+	
 	/* On vérifie la validité de l'en-tête */
 	
 	if (status == 505) {
