@@ -80,3 +80,19 @@ int len = 0;
      
 	return len;
 }
+
+char *rewrite_url(char *url)
+{
+	int i = 0;
+	
+	while (url[i] != 0) 
+	{
+		if (url[i] == '?') 
+		{		
+			url[i] = 0;
+			break;
+		}
+		i++;
+	}
+	return url;
+}	
