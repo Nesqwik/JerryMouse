@@ -98,7 +98,7 @@ void send_response(FILE* client, int code, const char* reason_phrase , const cha
 }
 
 
-void send_response(int client_socket, int code, const char* reason_phrase, int fd_message)
+void send_header(FILE* client, int code, const char* reason_phrase, int fd_message)
 {
 	int message_len = get_file_size(fd_message);
 	char response[1024];
@@ -111,4 +111,5 @@ void send_response(int client_socket, int code, const char* reason_phrase, int f
 		perror("write status");
 		exit(1);
 	}
+	fflush(client);
 }

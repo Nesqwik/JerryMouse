@@ -8,7 +8,7 @@
 	socket créée . */
 
 	int creer_serveur (int port );
-	void traitement_requete(int client_socket);
+	void traitement_requete(int client_socket, char* root_directory);
 	char* fgets_or_exit(char* buffer, int size, FILE* stream);
 	void skip_headers(FILE* client);
 

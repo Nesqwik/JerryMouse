@@ -35,7 +35,7 @@ int parse_http_request(const char *request_line , http_request *request)
 }
 
 /* Vérifie si la requête HTTP est valide (version supportée) et renvoie le statut de la réponse*/
-int is_valid_request(const char* request) 
+int is_valid_request(const char* request, char* url) 
 {
 	http_request req;
 	
@@ -48,11 +48,7 @@ int is_valid_request(const char* request)
 	if(req.major_version != 1)
 		return 505;	
 
-	if (is_valid_file(req.url) != 0)
-	{
-		free(req.url);
-	  	return 404;
-	}
+	strcpy(url, req.url);
 
 	free(req.url);
 	
@@ -100,15 +96,41 @@ int copy(int in, int out)
 
 		if(size == -1)
 		{
-			perror("read");
+			perror("cpy-read");
 			return -1;
 		}
 
-		if(write(out, buff, size)) 
+		if(write(out, buff, size) == -1) 
 		{
 			perror("wirte");
 			return -1;
 		}
-			
 	}
+
+
+	char* crlf = "\r\n\r\n";
+	if(write(out, crlf, strlen(crlf)) == -1) 
+	{
+		perror("wirte");
+		return -1;
+	}
+
+
+	return 0;
 }
+
+char *rewrite_url(char *url)
+{
+	int i = 0;
+	
+	while (url[i] != 0) 
+	{
+		if (url[i] == '?') 
+		{		
+			url[i] = 0;
+			break;
+		}
+		i++;
+	}
+	return url;
+}	

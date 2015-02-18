@@ -11,6 +11,7 @@
 #include "strtool.h"
 #include "socket.h"
 #include "http.h"
+#include "filehandler.h"
 
 int creer_serveur (int port)
 {
@@ -67,11 +68,13 @@ char* fgets_or_exit (char* buffer, int size, FILE* stream)
 	return buffer;
 }
 
-void traitement_requete(int client_socket) 
+void traitement_requete(int client_socket, char* root_directory) 
 {
 	char buff[256];
+	char url[256];
 	FILE* client;
 	int status;
+	int fd_ressource;
 	
 	/* On ouvre la socket et on associe son contenu a client */
 	client = fdopen(client_socket, "w+");
@@ -89,10 +92,15 @@ void traitement_requete(int client_socket)
 	
 	printf("%s", buff);
 
-	status = is_valid_request(buff);
+	status = is_valid_request(buff, url);
+
+	fd_ressource = check_and_open(rewrite_url(url), root_directory);
+
+	if(fd_ressource == -1)
+		status = 404;
 
 	/* On vérifie la validité de l'en-tête */
-
+	
 	if (status == 505) {
 		send_response(client, 505, "HTTP Version Not Supported", "HTTP Version Not Supported\r\n");
 	}
@@ -103,8 +111,8 @@ void traitement_requete(int client_socket)
 		send_response(client, 405, "Method Not Allowed", "Method Not Allowed\r\n" );
 	}
 	if(status == 200) {
-		send_response(client, 200, "OK", int fd);
-		copy(int fd, client_socket);
+		send_header(client, 200, "OK", fd_ressource);
+		copy(fd_ressource, client_socket);
 		exit(0);
 	}
 
