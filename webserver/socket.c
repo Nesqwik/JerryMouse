@@ -75,6 +75,7 @@ void traitement_requete(int client_socket, char* root_directory)
 	FILE* client;
 	int status;
 	int fd_ressource = 0;
+	char* type;
 	
 	/* On ouvre la socket et on associe son contenu a client */
 	client = fdopen(client_socket, "w+");
@@ -100,6 +101,7 @@ void traitement_requete(int client_socket, char* root_directory)
 
 		if(fd_ressource == -1)
 			status = 404;
+		type = get_type(url);
 	}
 	
 	/* On vérifie la validité de l'en-tête */
@@ -114,7 +116,7 @@ void traitement_requete(int client_socket, char* root_directory)
 		send_response(client, 405, "Method Not Allowed", "Method Not Allowed\r\n" );
 	}
 	if(status == 200) {
-		send_header(client, 200, "OK", fd_ressource);
+		send_header(client, 200, "OK", fd_ressource, type);
 		copy(fd_ressource, client_socket);
 		exit(0);
 	}

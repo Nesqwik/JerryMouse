@@ -7,6 +7,14 @@
 
 #include "strtool.h"
 
+char* get_type(char* url)
+{
+	if (strstr(url, ".html") != NULL) 
+		return "Content-Type: text/html\r\n";
+
+	return "";
+}
+
 /* Parse la requête HTTP pour être conforme à la forme voulue  
 retourne -1 si elle est invalide et 0 sinon */
 /*int parse_request(char* request, char* url, int* version_m)*/
