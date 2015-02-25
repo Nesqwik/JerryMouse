@@ -101,6 +101,8 @@ void traitement_requete(int client_socket, char* root_directory)
 	if (status == 200)
 	{
 		if(strcmp(rewrite_url(url), "/stats") == 0) {
+			increment_stats(1);
+			increment_stats(status);
 			send_stats(client);
 		}
 

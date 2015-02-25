@@ -12,6 +12,7 @@
 #include "signals.h"
 #include "strtool.h"
 #include "filehandler.h"
+#include "stats.h"
 
 int main(int argc, char** argv)
 {
@@ -33,6 +34,7 @@ int main(int argc, char** argv)
 
 	int client_socket, server_socket;
 
+	init_stats();
 	/* Création de la socket serveur sur le port (8080) */
 	server_socket = creer_serveur(PORT);
 	if(server_socket == -1)
