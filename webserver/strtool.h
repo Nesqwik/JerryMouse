@@ -15,7 +15,6 @@ typedef struct
 } http_request;
 
 char* get_type(char* url);
-int is_valid_file(char* url);
 int is_valid_request(const char* request, char* url);
 int is_valid_line(char* line);
 int get_file_size(int fd);
