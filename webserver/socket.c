@@ -57,9 +57,6 @@ int creer_serveur (int port)
 	return socket_server;
 }
 
-
-
-
 char* fgets_or_exit (char* buffer, int size, FILE* stream)
 {
 	if (fgets(buffer, size, stream) == NULL)
@@ -103,13 +100,11 @@ void traitement_requete(int client_socket, char* root_directory)
 	
 	if (status == 200)
 	{
-		url = rewrite_url(url);
-		
-		if(strcmp(url, "/stats") == 0) {
+		if(strcmp(rewrite_url(url), "/stats") == 0) {
 			send_stats(client);
 		}
 
-		fd_ressource = check_and_open(url, root_directory);
+		fd_ressource = check_and_open(rewrite_url(url), root_directory);
 
 		if(fd_ressource == -1)
 			status = 404;
@@ -137,8 +132,6 @@ void traitement_requete(int client_socket, char* root_directory)
 
 	send_response(client, 400, "Bad Request", "Bad Request\r\n");
 }
-
-
 
 void skip_headers(FILE* client)
 {
