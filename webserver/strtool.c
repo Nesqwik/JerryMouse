@@ -69,12 +69,6 @@ int is_valid_request(const char* request, char* url)
 	return 200;
 }
 
-int is_valid_file(char* url) 
-{
-	return access(url, F_OK);
-}
-
-
 /* Retourne le nombre de caractères lus sur la ligne 
    ou -1 si la ligne ne se termine pas par \r\n */
 int is_valid_line(char* line) 
