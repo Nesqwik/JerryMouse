@@ -95,9 +95,15 @@ void traitement_requete(int client_socket, char* root_directory)
 
 	status = is_valid_request(buff, url);
 	
-	if (status == 200) 
+	if (status == 200)
 	{
-		fd_ressource = check_and_open(rewrite_url(url), root_directory);
+		url = rewrite_url(url);
+		
+		if(strcmp(url, "/stats") == 0) {
+			send_stats(client);
+		}
+
+		fd_ressource = check_and_open(url, root_directory);
 
 		if(fd_ressource == -1)
 			status = 404;
