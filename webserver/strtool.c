@@ -12,7 +12,52 @@ char* get_type(char* url)
 	if (strstr(url, ".html") != NULL) 
 		return "Content-Type: text/html\r\n";
 
-	return "";
+	if (strstr(url, ".css") != NULL) 
+		return "Content-Type: text/css\r\n";
+
+	if (strstr(url, ".js") != NULL) 
+		return "Content-Type: applicaton/javascript\r\n";
+
+	if (strstr(url, ".png") != NULL) 
+		return "Content-Type: image/png\r\n";
+
+	if (strstr(url, ".jpg") != NULL) 
+		return "Content-Type: image/jpeg\r\n";
+
+	if (strstr(url, ".jpe") != NULL) 
+		return "Content-Type: image/jpeg\r\n";
+
+	if (strstr(url, ".jpeg") != NULL) 
+		return "Content-Type: image/jpeg\r\n";
+
+	if (strstr(url, ".gif") != NULL) 
+		return "Content-Type: image/gif\r\n";
+
+	if (strstr(url, ".bmp") != NULL) 
+		return "Content-Type: image/x-mx-bmp\r\n";
+
+	if (strstr(url, ".avi") != NULL) 
+		return "Content-Type: video/x-msvideo\r\n";
+
+	if (strstr(url, ".mp4") != NULL) 
+		return "Content-Type: video/mp4\r\n";
+
+	if (strstr(url, ".mp3") != NULL) 
+		return "Content-Type: audio/mpeg\r\n";
+
+	if (strstr(url, ".wav") != NULL) 
+		return "Content-Type: audio/x-wav\r\n";
+
+	if (strstr(url, ".ogg") != NULL) 
+		return "Content-Type: audio/ogg\r\n";
+
+	if (strstr(url, ".json") != NULL) 
+		return "Content-Type: applicaton/json\r\n";
+
+	if (strstr(url, ".xml") != NULL) 
+		return "Content-Type: applicaton/xml\r\n";
+
+	return "Content-Type: text/plain\r\n";
 }
 
 /* Parse la requête HTTP pour être conforme à la forme voulue  

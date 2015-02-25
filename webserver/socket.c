@@ -12,6 +12,8 @@
 #include "socket.h"
 #include "http.h"
 #include "filehandler.h"
+#include "stats.h"
+
 
 int creer_serveur (int port)
 {
@@ -76,6 +78,10 @@ void traitement_requete(int client_socket, char* root_directory)
 	int status;
 	int fd_ressource = 0;
 	char* type;
+
+
+	increment_stats(0);
+
 	
 	/* On ouvre la socket et on associe son contenu a client */
 	client = fdopen(client_socket, "w+");
@@ -110,8 +116,10 @@ void traitement_requete(int client_socket, char* root_directory)
 		type = get_type(url);
 	}
 	
+
+	increment_stats(1);
+
 	/* On vérifie la validité de l'en-tête */
-	
 	if (status == 505) {
 		send_response(client, 505, "HTTP Version Not Supported", "HTTP Version Not Supported\r\n");
 	}
