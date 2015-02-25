@@ -13,5 +13,6 @@ typedef struct
 
 int init_stats(void);
 web_stats *get_stats(void);
+void increment_stats(int code);
 
 #endif

@@ -18,3 +18,33 @@ web_stats *get_stats(void)
 {
 	return &stats;
 }
+
+
+void increment_stats(int code)
+{
+	web_stats* stats = get_stats();
+	switch(code)
+	{
+		case 200:
+			stats->ok_200 += 1;
+			break;
+
+		case 400:
+			stats->ko_400 += 1;
+			break;
+
+		case 403:
+			stats->ko_403 += 1;
+			break;
+
+		case 404:
+			stats->ko_404 += 1;
+			break;
+
+		case 0:
+			stats->served_connections += 1;
+
+		case 1:
+			stats->served_requests += 1;
+	}
+}

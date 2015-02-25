@@ -7,6 +7,7 @@
 #include <string.h>
 #include "http.h"
 #include "strtool.h"
+#include "stats.h"
 
 void send_status(FILE* client, int code, const char* reason_phrase)
 {
@@ -55,39 +56,14 @@ void send_header(FILE* client, int code, const char* reason_phrase, int fd_messa
 	fflush(client);
 }
 
-<<<<<<< HEAD
-
-void increment_stats(int code) {
-	web_stats* stats = get_stats();
-	switch(code) {
-		case 200:
-			stats->ok_200 += 1;
-			break;
-
-		case 400:
-			stats->ko_400 += 1;
-			break;
-
-		case 403:
-			stats->ko_403 += 1;
-			break;
-
-		case 404:
-			stats->ko_404 += 1;
-			break;
-
-		case 0:
-			stats->served_connections += 1;
-
-		case 1:
-			stats->served_requests += 1;
-	}
-}
-=======
 void send_stats(FILE* client)
 {
-	send_response(client, 200, "OK", "Statstatstats");
+
+	char buff[256];
+	web_stats* stats = get_stats();
+	sprintf(buff, "Connexions au serveur : %d\nReponses aux requetes : %d\nOK 200 : %d\nErreur 400 : %d\nErreur 403 : %d\nErreur 404 : %d\n",
+		stats->served_connections, stats->served_requests, stats->ok_200, stats->ko_400, stats->ko_403, stats->ko_404);
+	send_response(client, 200, "OK", buff);
 
 	exit(0);
 }
->>>>>>> 7c978bbf33af4178ae52a75803d0f1d43379e76e

@@ -113,19 +113,20 @@ void traitement_requete(int client_socket, char* root_directory)
 	
 
 	increment_stats(1);
+	increment_stats(status);
 
 	/* On vérifie la validité de l'en-tête */
 	if (status == 505) {
-		send_response(client, 505, "HTTP Version Not Supported", "HTTP Version Not Supported\r\n");
+		send_response(client, status, "HTTP Version Not Supported", "HTTP Version Not Supported\r\n");
 	}
 	if (status == 404) {
-		send_response(client, 404, "Not Found", "Not Found\r\n");
+		send_response(client, status, "Not Found", "Not Found\r\n");
 	} 
 	if (status == 405) {
-		send_response(client, 405, "Method Not Allowed", "Method Not Allowed\r\n" );
+		send_response(client, status, "Method Not Allowed", "Method Not Allowed\r\n" );
 	}
 	if(status == 200) {
-		send_header(client, 200, "OK", fd_ressource, type);
+		send_header(client, status, "OK", fd_ressource, type);
 		copy(fd_ressource, client_socket);
 		exit(0);
 	}
