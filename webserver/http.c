@@ -24,7 +24,7 @@ void send_response(FILE* client, int code, const char* reason_phrase , const cha
 {
 	int message_len = strlen(message_body);
 	char response[1024];
-	sprintf(response, "Connection: close\r\nContent-Length: %d\r\n\r\n%s\r\n", message_len, message_body);
+	sprintf(response, "Connection: close\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\n%s\r\n", message_len, message_body);
 	send_status(client, code, reason_phrase);
 
 	printf("%s", response);
@@ -53,4 +53,11 @@ void send_header(FILE* client, int code, const char* reason_phrase, int fd_messa
 		exit(1);
 	}
 	fflush(client);
+}
+
+void send_stats(FILE* client)
+{
+	send_response(client, 200, "OK", "Statstatstats");
+
+	exit(0);
 }
