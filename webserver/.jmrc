@@ -1,0 +1,3 @@
+root_directory : /home/infoetu/guilberl/public_html
+server_port : 8080
+maintenance_page : maintenance.html

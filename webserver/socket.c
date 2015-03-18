@@ -1,7 +1,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
-# include <stdio.h>
+#include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -55,6 +55,8 @@ int creer_serveur (int port)
 		perror("listen socket_server");
 		return -1;
 	}
+
+	printf("Server is listening to port %d\n", port);
 	
 	return socket_server;
 }
@@ -91,12 +93,14 @@ void traitement_requete(int client_socket, char* root_directory)
 	}
 
 	if(*get_in_maintenance() == 1) {
-		fd_ressource = check_and_open("maintenance.html", root_directory);
+		config_map* map = get_config_map();
+		char *maintenance_page = get(map, "maintenance_page");
+		fd_ressource = check_and_open(maintenance_page, root_directory);
 		if(fd_ressource == -1) {
 			send_response(client, 404, "Not Found", "Not Found\r\n");
 			exit(0);
 		}
-		send_header(client, 200, "OK", fd_ressource, get_type("maintenance.html"));
+		send_header(client, 200, "OK", fd_ressource, get_type(maintenance_page));
 		copy(fd_ressource, client_socket);
 		exit(0);
 	}
@@ -107,8 +111,6 @@ void traitement_requete(int client_socket, char* root_directory)
 	/* On passe les headers non supportés */
 	skip_headers(client);
 	
-	printf("%s", buff);
-
 	status = is_valid_request(buff, url);
 	
 	if (status == 200)
