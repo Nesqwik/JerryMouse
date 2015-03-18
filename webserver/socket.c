@@ -8,6 +8,8 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "const.h"
 #include "strtool.h"
 #include "socket.h"
 #include "http.h"
@@ -86,6 +88,17 @@ void traitement_requete(int client_socket, char* root_directory)
 	{
 		perror("fdopen socket");
 		exit(1);
+	}
+
+	if(*get_in_maintenance() == 1) {
+		fd_ressource = check_and_open("maintenance.html", root_directory);
+		if(fd_ressource == -1) {
+			send_response(client, 404, "Not Found", "Not Found\r\n");
+			exit(0);
+		}
+		send_header(client, 200, "OK", fd_ressource, get_type("maintenance.html"));
+		copy(fd_ressource, client_socket);
+		exit(0);
 	}
 
 	/* On lit l'en-tete de la requete */

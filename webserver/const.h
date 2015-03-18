@@ -6,4 +6,7 @@
 #define FALSE 0
 #define PORT 8080
 
+
+int* get_in_maintenance();
+
 #endif
