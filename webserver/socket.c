@@ -53,6 +53,8 @@ int creer_serveur (int port)
 		perror("listen socket_server");
 		return -1;
 	}
+
+	printf("Server is listening to port %d\n", port);
 	
 	return socket_server;
 }

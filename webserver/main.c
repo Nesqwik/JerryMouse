@@ -13,30 +13,39 @@
 #include "strtool.h"
 #include "filehandler.h"
 #include "stats.h"
+#include "config.h"
 
-int main(int argc, char** argv)
+//int main(int argc, char** argv)
+int main()
 {
-	if (argc < 2) 
+	int port;
+	config_map map;
+	load_config(&map);
+	get_port(&map, &port);
+
+	char *root_dir = get(&map, "root_directory");
+	
+	if (root_dir == NULL) 
 	{
-		printf("Couldn't launch without a root directory\n");
-		return 1;
+		root_dir = ".";
+		printf("Couldn't find a root directory in configuration file, lauching server with default root directory .\n");
 	}
 
-	if (check_root_dir(argv[1]) == -1) 
+	if (check_root_dir(root_dir) == -1) 
 	{
 		printf("Couldn't launch server with provided root directory\n");
 		return 1;
 	}
 	else
 	{
-		printf("Launched server with root directory %s\n", argv[1]);
+		printf("Launched server with root directory %s\n", root_dir);
 	}
 
 	int client_socket, server_socket;
 
 	init_stats();
 	/* Création de la socket serveur sur le port (8080) */
-	server_socket = creer_serveur(PORT);
+	server_socket = creer_serveur(port);
 	if(server_socket == -1)
 	{
 		return 1;
@@ -58,7 +67,7 @@ int main(int argc, char** argv)
 		
 		/* Nouveau processus de traitement du client */
 		if(fork() == 0) {
-			traitement_requete(client_socket, argv[1]);
+			traitement_requete(client_socket, root_dir);
 		}
 		else
 		{
